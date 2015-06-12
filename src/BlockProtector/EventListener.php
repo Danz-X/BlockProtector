@@ -13,27 +13,19 @@ class EventListener implements Listener{
     }
 
     public function onBlockBreak(BlockBreakEvent $event){
-        /*$file = $this->blockProtector->getDataFolder()."logs/".strtolower($event->getPlayer()->getName()).".json"; //This should not be necessary
-        if(!file_exists($file)){
-            file_put_contents($file, "[]");
-        }*/
-        $this->blockProtector->logs[strtolower($event->getPlayer()->getName())][] = [
-            "action" => "broke",
-            "x" => $event->getBlock()->x,
-            "y" => $event->getBlock()->y,
-            "z" => $event->getBlock()->z,
-            "level" => $event->getBlock()->level->getName()
-        ];
+        if($this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer())){
+            $event->setCancelled();
+        }else{
+            $this->blockProtector->log("broke", $event->getBlock(), $event->getPlayer());
+        }
     }
 
     public function onBlockPlace(BlockPlaceEvent $event){
-        $this->blockProtector->logs[strtolower($event->getPlayer()->getName())][] = [
-            "action" => "placed",
-            "x" => $event->getBlock()->x,
-            "y" => $event->getBlock()->y,
-            "z" => $event->getBlock()->z,
-            "level" => $event->getBlock()->level->getName()
-        ];
+        if($this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer())){
+            $event->setCancelled();
+        }else{
+            $this->blockProtector->log("placed", $event->getBlock(), $event->getPlayer());
+        }
     }
 
 }
