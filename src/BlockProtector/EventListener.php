@@ -13,7 +13,7 @@ class EventListener implements Listener{
     }
 
     public function onBlockBreak(BlockBreakEvent $event){
-        $this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer()) ? $event->setCancelled() : $this->blockProtector->log("placed", $event->getBlock(), $event->getPlayer());
+        $this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer()) ? $event->setCancelled() : $this->blockProtector->log("broke", $event->getBlock(), $event->getPlayer());
     }
 
     public function onBlockPlace(BlockPlaceEvent $event){
