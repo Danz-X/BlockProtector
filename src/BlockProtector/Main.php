@@ -18,9 +18,12 @@ class Main extends PluginBase{
         @mkdir($this->getDataFolder());
         $logsPath = $this->getDataFolder()."logs/";
         @mkdir($logsPath);
-        foreach(array_diff(scandir($logsPath), ['..', '.']) as $file){ //http://php.net/manual/en/function.scandir.php
-            $name = substr($file, 0, strlen($file) - 4); //remove file extension .json to get the name of the player
-            $this->logs[$name] = json_decode(file_get_contents($logsPath.$file), true);
+        $files = array_diff(scandir($logsPath), ['..', '.']);
+        if(count($files) > 0){
+            foreach($files as $file){
+                $name = substr($file, 0, strlen($file) - 4);
+                $this->logs[$name] = json_decode(file_get_contents($logsPath.$file), true);
+            }
         }
     }
 
