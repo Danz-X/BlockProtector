@@ -2,35 +2,42 @@
 
 namespace BlockProtector;
 
+use BlockProtector\Providers\JsonProvider;
+use BlockProtector\Providers\SQLite3Provider;
 use pocketmine\block\Block;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\Config;
 
 class Main extends PluginBase{
 
     public $logs = [];
     public $inspect = [];
+    /**@var Providers\Provider*/
+    public $provider;
 
     public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         @mkdir($this->getDataFolder());
         $logsPath = $this->getDataFolder()."logs/";
         @mkdir($logsPath);
-        $files = array_diff(scandir($logsPath), ['..', '.']);
-        if(count($files) > 0){
-            foreach($files as $file){
-                $name = substr($file, 0, strlen($file) - 4);
-                $this->logs[$name] = json_decode(file_get_contents($logsPath.$file), true);
-            }
+        $provider = strtolower((new Config($this->getDataFolder()."config.yml", Config::YAML, ["provider" => "json"]))->get("provider"));
+        if($provider === "json"){
+            $this->provider = new JsonProvider($this);
+            $this->getLogger()->info("Data provider set to json");
+        }elseif($provider === "sqlite3"){
+            $this->provider = new SQLite3Provider($this);
+            $this->getLogger()->info("Data provider set to sqlite3");
+        }else{
+            $this->provider = new JsonProvider($this);
+            $this->getLogger()->info("Data provider set to json");
         }
     }
 
     public function onDisable(){
-        foreach($this->logs as $name => $logs){
-            file_put_contents($this->getDataFolder()."logs/$name.json", json_encode($logs));
-        }
+        $this->provider->close();
     }
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args){
@@ -57,33 +64,9 @@ class Main extends PluginBase{
         return true;
     }
 
-    public function getLogsAt(Block $block){
-        $l = [];
-        foreach($this->logs as $player => $logs){
-            foreach($logs as $log){
-                if($log["x"] == $block->x and $log["y"] == $block->y and $log["z"] == $block->z and $log["level"] == $block->level->getName()){
-                    $log["player"] = $player;
-                    $l[] = $log;
-                }
-            }
-        }
-        return $l;
-    }
-
-    public function log($action, Block $block, Player $player){
-        $this->logs[strtolower($player->getName())][] = [
-            "action" => $action,
-            "x" => $block->x,
-            "y" => $block->y,
-            "z" => $block->z,
-            "level" => $block->level->getName(),
-            "block" => $block->getName()
-        ];
-    }
-
     public function checkInspect(Block $block, Player $player){
         if($this->inspect[$player->getName()]){
-            $logs = $this->getLogsAt($block);
+            $logs = $this->provider->getLogsAt($block);
             if(count($logs) === 0){
                 $player->sendMessage("No logs found at this position");
             }else{

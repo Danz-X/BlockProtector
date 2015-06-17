@@ -16,7 +16,7 @@ class EventListener implements Listener{
         if($this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer())){
             $event->setCancelled();
         }elseif(!$event->isCancelled()){
-            $this->blockProtector->log("broke", $event->getBlock(), $event->getPlayer());
+            $this->blockProtector->provider->log("broke", $event->getBlock(), $event->getPlayer());
         }
     }
 
@@ -24,7 +24,7 @@ class EventListener implements Listener{
         if($this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer())){
             $event->setCancelled();
         }elseif(!$event->isCancelled()){
-            $this->blockProtector->log("placed", $event->getBlock(), $event->getPlayer());
+            $this->blockProtector->provider->log("placed", $event->getBlock(), $event->getPlayer());
         }
     }
 
