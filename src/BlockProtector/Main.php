@@ -13,7 +13,6 @@ use pocketmine\utils\Config;
 
 class Main extends PluginBase{
 
-    public $logs = [];
     public $inspect = [];
     /**@var Providers\Provider*/
     public $provider;
