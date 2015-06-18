@@ -18,7 +18,7 @@ class JsonProvider implements Provider{
         $files = array_diff(scandir($logsPath), ['..', '.']);
         if(count($files) > 0){
             foreach($files as $file){
-                $name = substr($file, 0, strlen($file) - 4);
+                $name = substr($file, 0, strlen($file) - 6);
                 $this->logs[$name] = json_decode(file_get_contents($logsPath.$file), true);
             }
         }
