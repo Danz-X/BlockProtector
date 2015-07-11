@@ -15,7 +15,7 @@ class JsonProvider implements Provider{
     public function __construct(Main $plugin){
         $this->plugin = $plugin;
         $logsPath = $this->plugin->getDataFolder()."logs/";
-        $files = array_diff(scandir($logsPath), ['..', '.']);
+        $files = array_diff(scandir($logsPath), ["..", "."]);
         if(count($files) > 0){
             foreach($files as $file){
                 $name = substr($file, 0, strlen($file) - 6);
@@ -28,7 +28,7 @@ class JsonProvider implements Provider{
         $l = [];
         foreach($this->logs as $player => $logs){
             foreach($logs as $log){
-                if($log["x"] == $block->x and $log["y"] == $block->y and $log["z"] == $block->z and $log["level"] == $block->level->getName()){
+                if($log["x"] === $block->x and $log["y"] === $block->y and $log["z"] === $block->z and $log["level"] === $block->level->getName()){
                     $log["player"] = $player;
                     $l[] = $log;
                 }

@@ -20,8 +20,7 @@ class Main extends PluginBase{
     public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         @mkdir($this->getDataFolder());
-        $logsPath = $this->getDataFolder()."logs/";
-        @mkdir($logsPath);
+        @mkdir($this->getDataFolder()."logs/");
         $provider = strtolower((new Config($this->getDataFolder()."config.yml", Config::YAML, ["provider" => "json"]))->get("provider"));
         if($provider === "json"){
             $this->provider = new JsonProvider($this);
@@ -64,13 +63,13 @@ class Main extends PluginBase{
     }
 
     public function checkInspect(Block $block, Player $player){
-        if($this->inspect[$player->getName()]){
+        if(isset($this->inspect[$player->getName()])){
             $logs = $this->provider->getLogsAt($block);
             if(count($logs) === 0){
                 $player->sendMessage("No logs found at this position");
             }else{
                 foreach($logs as $log){
-                    $player->sendMessage($log["player"]." ".$log["action"]." ".$log["block"]." here");
+                    $player->sendMessage("[Log] ".$log["player"]." ".$log["action"]." ".$log["block"]." here");
                 }
             }
             return true;
