@@ -56,7 +56,7 @@ class Main extends PluginBase{
                 $sender->sendMessage("Place or break blocks to see who built at its position");
                 return true;
             }
-            $sender->sendMessage("Strange argument ".$sub.", use /pb inspect");
+            $sender->sendMessage("Strange argument ".$sub.", use /bp inspect");
             return true;
         }
         return true;

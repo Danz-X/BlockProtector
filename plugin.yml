@@ -1,0 +1,19 @@
+name: BlockProtector
+main: BlockProtector\Main
+version: 1.0
+api: [1.12.0]
+
+load: POSTWORLD
+author: luca28pet
+description: Log all block changes in your worlds
+website: https://github.com/luca28pet/BlockProtector
+commands:
+ blockprotector:
+  description: Activate inspector
+  usage: "/bp <inspect>"
+  aliases: [bp, bprotect]
+  permission: blockprotector.command
+permissions:
+ blockprotector.command:
+  description: "Allows to use the inspector"
+  default: op
