@@ -15,7 +15,7 @@ class EventListener implements Listener{
     public function onBlockBreak(BlockBreakEvent $event){
         if($this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer())){
             $event->setCancelled();
-        }elseif(!$event->isCancelled()){
+        }elseif(!$event->isCancelled() and in_array($event->getPlayer()->getLevel()->getName(), $this->blockProtector->getConfig()->get("worlds"))){
             $this->blockProtector->provider->log("broke", $event->getBlock(), $event->getPlayer());
         }
     }
@@ -23,7 +23,7 @@ class EventListener implements Listener{
     public function onBlockPlace(BlockPlaceEvent $event){
         if($this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer())){
             $event->setCancelled();
-        }elseif(!$event->isCancelled()){
+        }elseif(!$event->isCancelled() and in_array($event->getPlayer()->getLevel()->getName(), $this->blockProtector->getConfig()->get("worlds"))){
             $this->blockProtector->provider->log("placed", $event->getBlock(), $event->getPlayer());
         }
     }

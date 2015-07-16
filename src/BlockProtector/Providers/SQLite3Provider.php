@@ -15,7 +15,7 @@ class SQLite3Provider implements Provider{
         $this->plugin = $plugin;
         if(!file_exists($this->plugin->getDataFolder()."logs/players.db")){
             $this->logs = new \SQLite3($this->plugin->getDataFolder()."logs/logs.db", SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
-            $this->logs->exec("CREATE TABLE IF NOT EXISTS logs (player TEXT PRIMARY KEY, x INTEGER, y INTEGER, z INTEGER, block TEXT, action TEXT)");
+            $this->logs->exec("CREATE TABLE IF NOT EXISTS logs (player TEXT, x INTEGER, y INTEGER, z INTEGER, block TEXT, action TEXT)");
         }else{
             $this->logs = new \SQLite3($this->plugin->getDataFolder()."logs/logs.db", SQLITE3_OPEN_READWRITE);
         }

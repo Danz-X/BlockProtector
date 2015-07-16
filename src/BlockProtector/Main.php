@@ -9,7 +9,6 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
-use pocketmine\utils\Config;
 
 class Main extends PluginBase{
 
@@ -21,16 +20,20 @@ class Main extends PluginBase{
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         @mkdir($this->getDataFolder());
         @mkdir($this->getDataFolder()."logs/");
-        $provider = strtolower((new Config($this->getDataFolder()."config.yml", Config::YAML, ["provider" => "json"]))->get("provider"));
-        if($provider === "json"){
-            $this->provider = new JsonProvider($this);
-            $this->getLogger()->info("Data provider set to json");
-        }elseif($provider === "sqlite3"){
-            $this->provider = new SQLite3Provider($this);
-            $this->getLogger()->info("Data provider set to sqlite3");
-        }else{
-            $this->provider = new JsonProvider($this);
-            $this->getLogger()->info("Data provider set to json");
+        $this->saveDefaultConfig();
+        switch($this->getConfig()->get("provider")){
+            case "json":
+                $this->provider = new JsonProvider($this);
+                $this->getLogger()->info("Data provider set to json");
+                break;
+            case "sqlite3":
+                $this->provider = new SQLite3Provider($this);
+                $this->getLogger()->info("Data provider set to sqlite3");
+                break;
+            default:
+                $this->provider = new SQLite3Provider($this);
+                $this->getLogger()->info("Data provider set to sqlite3");
+                break;
         }
     }
 
