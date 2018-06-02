@@ -8,24 +8,27 @@ use pocketmine\event\Listener;
 
 class EventListener implements Listener{
 
-    public function __construct(Main $blockProtector){
-        $this->blockProtector = $blockProtector;
-    }
+	/** @var Main */
+	private $blockProtector;
 
-    public function onBlockBreak(BlockBreakEvent $event){
-        if($this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer())){
-            $event->setCancelled();
-        }elseif(!$event->isCancelled() and in_array($event->getPlayer()->getLevel()->getName(), $this->blockProtector->getConfig()->get("worlds"))){
-            $this->blockProtector->provider->log("broke", $event->getBlock(), $event->getPlayer());
-        }
-    }
+	public function __construct(Main $blockProtector){
+		$this->blockProtector = $blockProtector;
+	}
 
-    public function onBlockPlace(BlockPlaceEvent $event){
-        if($this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer())){
-            $event->setCancelled();
-        }elseif(!$event->isCancelled() and in_array($event->getPlayer()->getLevel()->getName(), $this->blockProtector->getConfig()->get("worlds"))){
-            $this->blockProtector->provider->log("placed", $event->getBlock(), $event->getPlayer());
-        }
-    }
+	public function onBlockBreak(BlockBreakEvent $event) : void{
+		if($this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer())){
+			$event->setCancelled();
+		}elseif(!$event->isCancelled() and in_array($event->getPlayer()->getLevel()->getFolderName(), $this->blockProtector->getConfig()->get("worlds"))){
+			$this->blockProtector->provider->log("broke", $event->getBlock(), $event->getPlayer());
+		}
+	}
+
+	public function onBlockPlace(BlockPlaceEvent $event) : void{
+		if($this->blockProtector->checkInspect($event->getBlock(), $event->getPlayer())){
+			$event->setCancelled();
+		}elseif(!$event->isCancelled() and in_array($event->getPlayer()->getLevel()->getFolderName(), $this->blockProtector->getConfig()->get("worlds"))){
+			$this->blockProtector->provider->log("placed", $event->getBlock(), $event->getPlayer());
+		}
+	}
 
 }
