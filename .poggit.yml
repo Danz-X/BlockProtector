@@ -1,0 +1,8 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Danz-X/BlockProtectorr
+build-by-default: true
+branches:
+- master
+projects:
+  BlockProtectorr:
+    path: ""
+...
