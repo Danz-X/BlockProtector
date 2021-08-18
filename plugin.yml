@@ -1,7 +1,7 @@
 name: BlockProtector
 main: BlockProtector\Main
 version: 1.0
-api: [3.22.1]
+api: 3.22.1
 
 load: POSTWORLD
 author: luca28pet
